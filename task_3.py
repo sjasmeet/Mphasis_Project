@@ -9,6 +9,7 @@ Please use Jmeter_log1.jtl, Jmeter_log2.jtl as input files for testing out your 
 '''
 
 import datetime
+from pytz import timezone
 
 def analyze_jmeter_logs(*files):
     print('{},{},{},{},{}'.format('label', 'response_code', 'response_message', 'failure_message', 'pst_time'))
@@ -22,7 +23,7 @@ def analyze_jmeter_logs(*files):
             label,response_code,response_message,failure_message,timestamp = fields[2],fields[3],fields[4],fields[8],fields[0]
             if response_code == '200':
                 continue
-            pst_time = datetime.datetime.fromtimestamp(int(timestamp)/1000).strftime("%Y-%m-%d %H:%M:%S")
+            pst_time = datetime.datetime.fromtimestamp(int(timestamp) / 1000).astimezone(timezone('US/Pacific')).strftime("%Y-%m-%d %H:%M:%S %Z%z")
 
             print('{},{},{},{},{}'.format(label,response_code,response_message,failure_message,pst_time))
 
