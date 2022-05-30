@@ -15,23 +15,22 @@ def remove_jsonkeys(data,keys_to_delete):
     out_data = copy.deepcopy(data)
 
     for outerkey in data:
-        if isinstance(data[outerkey], (dict)):
+        if outerkey in keys_to_delete:
+            del out_data[outerkey]
+        elif isinstance(data[outerkey], (dict)):
             for innerkey in data[outerkey]:
                 if innerkey in keys_to_delete:
-                    del out_data[outerkey]
-                    break
+                    del out_data[outerkey][innerkey]
         elif isinstance(data[outerkey], (list)):
             for index,innerkey in enumerate(data[outerkey]):
                 if innerkey in keys_to_delete:
                     del out_data[outerkey][index]
-        elif outerkey in keys_to_delete:
-            del out_data[outerkey]
 
     return out_data
 
 json_file = 'test_payload.json'
 
-keys_to_delete = ['appdate','dateterm','dateeff','sessionId']
+keys_to_delete = ['sessionId']
 
 with open(json_file) as f:
     data = json.load(f)
